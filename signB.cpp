@@ -1,12 +1,13 @@
-//Sign B Config
+//Sign B basic functions
 
 #include "FastLED.h"
 
-#define CHIPSET     WS2812B
-#define COLOR_ORDER GRB
+#define CHIPSET           WS2812B
+#define COLOR_ORDER       GRB
 
-#define BRIGHTNESS  64
+#define BRIGHTNESS        64
 
+//The number of pixels in each section:
 #define N_LEDS_WING_LEFT  266
 #define N_LEDS_WING_RIGHT 266
 #define N_LEDS_HEAD       45
@@ -17,19 +18,28 @@
 #define MAX_STRIP_LENGTH  275
 #define N_STRIPS          6
 
-#define PIN_WING_LEFT   1
-#define PIN_WING_RIGHT  2
-#define PIN_HEAD        3
-#define PIN_BODY_UPPER  4
-#define PIN_BODY_LOWER  5
-#define PIN_TAIL        6
+//The data pins
+#define PIN_WING_LEFT     1
+#define PIN_WING_RIGHT    2
+#define PIN_HEAD          3
+#define PIN_BODY_UPPER    4
+#define PIN_BODY_LOWER    5
+#define PIN_TAIL          6
 
-#define INDEX_WING_LEFT  0
-#define INDEX_WING_RIGHT 1
-#define INDEX_HEAD       2
-#define INDEX_BODY_UPPER 3
-#define INDEX_BODY_LOWER 4
-#define INDEX_TAIL       5
+//The order in which the strips are wired
+#define INDEX_WING_LEFT   0
+#define INDEX_WING_RIGHT  1
+#define INDEX_HEAD        2
+#define INDEX_BODY_UPPER  3
+#define INDEX_BODY_LOWER  4
+#define INDEX_TAIL        5
+
+//The dimensions of the virtual pixelMap to be rendered
+#define MAP_WIDTH         111
+#define MAP_HEIGHT        25
+
+//An integer to indicate a non-existent pixel
+#define DNE               -1
 
 /*
 CRGB signWingLeft[N_LEDS_WING_LEFT];
@@ -40,7 +50,46 @@ CRGB signBodyLower[N_LEDS_BODY_LOWER];
 CRGB signTail[N_LEDS_TAIL];
 */
 
-CRGB leds[N_STRIPS][MAX_STRIP_LENGTH]
+int16_t pixelMap[MAP_HEIGHT][MAP_WIDTH] = {
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,},
+  {,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,,,,,  ,}
+};
+
+CRGB leds[N_STRIPS][MAX_STRIP_LENGTH];
+
+uint16_t offsetWingLeft = N_LEDS_WING_LEFT;
+uint16_t offsetWingRight = N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT;
+uint16_t offsetHead = N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD;
+uint16_t offsetBodyUpper = N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD + N_LEDS_BODY_UPPER;
+uint16_t offsetBodyLower = N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD + N_LEDS_BODY_UPPER + N_LEDS_BODY_LOWER;
+
 
 void setup() {
   /*
@@ -65,39 +114,52 @@ void loop() {
 }
 
 int XY(int x, int y) {
-  if(y > HEIGHT) {
-    y = HEIGHT;
+  return pixelMap[y][x];
+}
+
+/*
+**  Use the following two functions together to get strip index and pixel index
+**  E.G. leds[getStripFromPixelIndex(i)][getPixelIndexInStrip(i)]
+*/
+
+uint8_t getStripFromPixelIndex(uint16_t i) {
+  if(i >= 0 && i < offsetWingLeft) {
+    return INDEX_WING_LEFT;
   }
-  if(y < 0) {
-    y = 0;
+  if(i >= offsetWingLeft && i < offsetWingRight) {
+    return INDEX_WING_RIGHT;
   }
-  if(x > WIDTH) {
-    x = WIDTH;
+  if(i >= offsetWingRight && i < offsetHead) {
+    return INDEX_HEAD;
   }
-  if(x < 0) {
-    x = 0;
+  if(i >= offsetHead && i < offsetBodyUpper) {
+    return INDEX_BODY_UPPER;
   }
-  // for a serpentine layout reverse every 2nd row:
-  if(x % 2 == 1) {
-    return (x * (WIDTH) + (HEIGHT - y -1));
+  if(i >= offsetBodyUpper && i < offsetBodyLower) {
+    return INDEX_BODY_LOWER;
   }
-  else {
-    // use that line only, if you have all rows beginning at the same side
-    return (x * (WIDTH) + y);
+  if(i >= offsetBodyLower && i < offsetTail) {
+    return INDEX_TAIL;
   }
 }
 
-uint8_t getStripFromPixelIndex(uint16_t i) {
-  if(i >= 0 && i < N_LEDS_WING_LEFT) {
-    return INDEX_WING_LEFT;
+uint16_t getPixelIndexInStrip(uint16_t i) {
+  if(i >= 0 && i < offsetWingLeft) {
+    return i;
   }
-  if(i >= N_LEDS_WING_LEFT && i < N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT) {
-    return INDEX_WING_RIGHT;
+  if(i >= offsetWingLeft && i < offsetWingRight) {
+    return i - offsetWingLeft;
   }
-  if(i >= N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT && i < N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD) {
-    return INDEX_HEAD;
+  if(i >= offsetWingRight && i < offsetHead) {
+    return i - offsetWingRight;
   }
-  if(i >= N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD && i < N_LEDS_WING_LEFT + N_LEDS_WING_RIGHT + N_LEDS_HEAD) {
-    return INDEX_HEAD;
+  if(i >= offsetHead && i < offsetBodyUpper) {
+    return i - offsetHead;
+  }
+  if(i >= offsetBodyUpper && i < offsetBodyLower) {
+    return i - offsetBodyUpper;
+  }
+  if(i >= offsetBodyLower && i < offsetTail) {
+    return i - offsetBodyLower;
   }
 }
