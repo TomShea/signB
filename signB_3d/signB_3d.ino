@@ -131,9 +131,9 @@ void loop() {
       int16_t p = pixelMap[x][y][1];
       //int16_t p[2] = pixelMap[x][y];
       leds[s][p] = CHSV(125, 255, 255);
-      FastLED.show();      
+      FastLED.show();
       delay(20);
-    }    
+    }
   }
   */
   ClearAll();
@@ -151,14 +151,20 @@ void ClearAll() {
 }
 
 void testHorizontalLineDown() {
+  uint8_t pin;
+  uint16_t pixel;
+  uint8_t pinPrevious;
+  uint16_t pixelPrevious;
   for (uint8_t y = 0; y < MAP_HEIGHT; y++) {
     for (uint8_t x = 0; x < MAP_WIDTH; x++) {
-      uint8_t pin = pixelMap[y][x][0];
-      uint16_t pixel = pixelMap[y][x][1];
-      leds[pin][pixel] = segmentColor(pin);
-      uint8_t pinPrevious = pixelMap[y-1][x][0];
-      uint16_t pixelPrevious = pixelMap[y-1][x][1];
-      leds[pinPrevious][pixelPrevious] = 0;
+      if (x >= 2*y - 4 && x <= 114 - 2*y) {
+        pin = pixelMap[y][x][0];
+        pixel = pixelMap[y][x][1];
+        leds[pin][pixel] = segmentColor(pin);
+        pinPrevious = pixelMap[y-1][x][0];
+        pixelPrevious = pixelMap[y-1][x][1];
+        leds[pinPrevious][pixelPrevious] = 0;
+      }
     }
     FastLED.show();
     delay(1000);
@@ -172,7 +178,7 @@ CRGB segmentColor(uint8_t pin){
     case 1 :
       return CRGB::Orange;
     case 2 :
-      return CRGB::Yellow;  
+      return CRGB::Yellow;
     case 3 :
       return CRGB::Green;
     case 4 :
@@ -226,4 +232,3 @@ uint16_t getPixelIndexInStrip(uint16_t i) {
   }
 }
 */
-
