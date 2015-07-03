@@ -1,7 +1,7 @@
 <?php
 
 //  PARALLEL CONFIG
-$r = '{' . PHP_EOL . {';
+$r = '{' . PHP_EOL . '{';
 
 // Row 1 (top of head)
 $r .= n(55);
@@ -171,9 +171,8 @@ $r .= e();
 $r .= n(52);
 $r .= a(5, 29, 24);
 $r .= n(53);
-$r .= e();
 
-$r .= PHP_EOL . '}';
+$r .= '}' . PHP_EOL . '}';
 
 echo $r;
 

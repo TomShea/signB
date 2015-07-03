@@ -131,9 +131,9 @@ void loop() {
       int16_t p = pixelMap[x][y][1];
       //int16_t p[2] = pixelMap[x][y];
       leds[s][p] = CHSV(125, 255, 255);
-      FastLED.show();      
+      FastLED.show();
       delay(20);
-    }    
+    }
   }
   */
   ClearAll();
@@ -158,7 +158,7 @@ void testHorizontalLineDown() {
       leds[pin][pixel] = segmentColor(pin);
       uint8_t pinPrevious = pixelMap[y-1][x][0];
       uint16_t pixelPrevious = pixelMap[y-1][x][1];
-      leds[pin][pixel] = 0;
+      leds[pinPrevious][pixelPrevious] = 0;
     }
     FastLED.show();
     delay(1000);
@@ -172,7 +172,7 @@ CRGB segmentColor(uint8_t pin){
     case 1 :
       return CRGB::Orange;
     case 2 :
-      return CRGB::Yellow;  
+      return CRGB::Yellow;
     case 3 :
       return CRGB::Green;
     case 4 :
