@@ -1,5 +1,7 @@
 <?php
 
+// Script to generate pixelMap
+
 //  Initialize
 $r = '{ {';
 
