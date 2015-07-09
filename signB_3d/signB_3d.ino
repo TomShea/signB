@@ -114,7 +114,7 @@ uint16_t speed = 20; // speed is set dynamically once we've started up
 uint16_t scale = 30; // scale is set dynamically once we've started up
 
 // This is the array that we keep our computed noise values in
-uint8_t noise[MAP_WIDTH/2 + 1][MAP_HEIGHT];
+uint8_t noise[MAP_WIDTH/2 + 1][MAP_WIDTH/2 + 1];
 
 CRGBPalette16 currentPalette( PartyColors_p );
 uint8_t       colorLoop = 1;
@@ -149,10 +149,10 @@ void fillnoise8() {
 
   for(int i = 0; i < MAP_WIDTH/2 + 1; i++) {
     int ioffset = scale * i;
-    for(int j = 0; j < MAP_HEIGHT; j++) {
+    for(int j = 0; j < MAP_WIDTH/2 + 1; j++) {
       int joffset = scale * j;
 
-      uint8_t data = inoise8(x + ioffset,y + joffset,z);
+      uint8_t data = inoise8(x + joffset,y + ioffset,z);
 
       // The range of the inoise8 function is roughly 16-238.
       // These two operations expand those values out to roughly 0..255
@@ -234,7 +234,7 @@ void loop() {
 
   // Periodically choose a new palette, speed, and scale
   ChangePaletteAndSettingsPeriodically();
-
+  //currentPalette = ForestColors_p;   speed = 10; scale = 20; colorLoop = 1;
   // generate noise data
   fillnoise8();
 
@@ -278,27 +278,33 @@ void sweeper() {
 // 1 = 5 sec per palette
 // 2 = 10 sec per palette
 // etc
-#define HOLD_PALETTES_X_TIMES_AS_LONG 1
+#define HOLD_PALETTES_X_TIMES_AS_LONG 5
 
 void ChangePaletteAndSettingsPeriodically()
 {
-  uint8_t secondHand = ((millis() / 1000) / HOLD_PALETTES_X_TIMES_AS_LONG) % 60;
+  uint8_t secondHand = ((millis() / 1000) / HOLD_PALETTES_X_TIMES_AS_LONG) % 90;
   static uint8_t lastSecond = 99;
 
   if( lastSecond != secondHand) {
     lastSecond = secondHand;
-    if( secondHand ==  0)  { currentPalette = RainbowColors_p;         speed = 20; scale = 30; colorLoop = 1; }
-    if( secondHand ==  5)  { SetupPurpleAndGreenPalette();             speed = 10; scale = 50; colorLoop = 1; }
-    if( secondHand == 10)  { SetupBlackAndWhiteStripedPalette();       speed = 20; scale = 30; colorLoop = 1; }
-    if( secondHand == 15)  { currentPalette = ForestColors_p;          speed =  8; scale =120; colorLoop = 0; }
-    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  4; scale = 30; colorLoop = 0; }
-    if( secondHand == 25)  { currentPalette = LavaColors_p;            speed =  8; scale = 50; colorLoop = 0; }
-    if( secondHand == 30)  { currentPalette = OceanColors_p;           speed = 20; scale = 90; colorLoop = 0; }
-    if( secondHand == 35)  { currentPalette = PartyColors_p;           speed = 20; scale = 30; colorLoop = 1; }
-    if( secondHand == 40)  { SetupRandomPalette();                     speed = 20; scale = 20; colorLoop = 1; }
-    if( secondHand == 45)  { SetupRandomPalette();                     speed = 50; scale = 50; colorLoop = 1; }
-    if( secondHand == 50)  { SetupRandomPalette();                     speed = 90; scale = 90; colorLoop = 1; }
-    if( secondHand == 55)  { currentPalette = RainbowStripeColors_p;   speed = 30; scale = 20; colorLoop = 1; }
+    if( secondHand ==  0)  { currentPalette = RainbowStripeColors_p;   speed =  9; scale = 18; colorLoop = 1; }
+    if( secondHand ==  5)  { SetupRandomPalette();                     speed = 24; scale = 26; colorLoop = 1; }
+    if( secondHand == 10)  { SetupBlackAndWhiteStripedPalette();       speed = 14; scale = 18; colorLoop = 1; }
+    if( secondHand == 15)  { SetupRandomPalette();                     speed = 40; scale = 20; colorLoop = 1; }//
+    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  8; scale = 30; colorLoop = 0; }
+    if( secondHand == 25)  { SetupRandomPalette();                     speed = 19; scale = 15; colorLoop = 1; }
+    if( secondHand == 30)  { currentPalette = LavaColors_p;            speed = 12; scale = 24; colorLoop = 0; }
+    if( secondHand == 35)  { SetupRandomPalette();                     speed = 29; scale = 4; colorLoop = 1; }
+    if( secondHand == 40)  { currentPalette = OceanColors_p;           speed = 24; scale = 30; colorLoop = 0; }
+    if( secondHand == 45)  { SetupRandomPalette();                     speed = 30; scale = 35; colorLoop = 1; }
+    if( secondHand == 50)  { currentPalette = PartyColors_p;           speed = 14; scale = 18; colorLoop = 1; }
+    if( secondHand == 55)  { SetupRandomPalette();                     speed = 30; scale = 28; colorLoop = 1; }
+    if( secondHand == 60)  { SetupPurpleAndGreenPalette();             speed =  9; scale = 20; colorLoop = 1; }
+    if( secondHand == 65)  { SetupRandomPalette();                     speed = 14; scale = 30; colorLoop = 1; }
+    if( secondHand == 70)  { currentPalette = ForestColors_p;          speed =  6; scale = 30; colorLoop = 0; }
+    if( secondHand == 75)  { SetupRandomPalette();                     speed = 16; scale = 28; colorLoop = 1; }//
+    if( secondHand == 80)  { currentPalette = RainbowColors_p;         speed = 60; scale = 25; colorLoop = 1; }
+    if( secondHand == 85)  { SetupRandomPalette();                     speed = 13; scale = 35; colorLoop = 1; }
   }
 }
 
@@ -345,3 +351,4 @@ void SetupPurpleAndGreenPalette()
     green,  green,  black,  black,
     purple, purple, black,  black );
 }
+
