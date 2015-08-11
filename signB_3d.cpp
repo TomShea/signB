@@ -113,6 +113,10 @@ uint16_t speed = 20; // speed is set dynamically once we've started up
 // of 1 will be so zoomed in, you'll mostly see solid colors.
 uint16_t scale = 30; // scale is set dynamically once we've started up
 
+// Set the modifiers to determine the rate at which x and y scroll
+uint16_t xDrift = 1;
+uint16_t yDrift = 1;
+
 // This is the array that we keep our computed noise values in
 uint8_t noise[MAP_WIDTH/2 + 1][MAP_WIDTH/2 + 1];
 
@@ -173,8 +177,8 @@ void fillnoise8() {
   z += speed;
 
   // apply slow drift to X and Y, just for visual variation.
-  x += speed / 8;
-  y -= speed / 16;
+  x += speed * xDrift / 8;
+  y -= speed * yDrift / 16;
 }
 
 void mapNoiseToLEDsUsingPalette()
@@ -231,17 +235,14 @@ void mapNoiseToLEDsUsingPalette()
 }
 
 void loop() {
-
   // Periodically choose a new palette, speed, and scale
   ChangePaletteAndSettingsPeriodically();
   //currentPalette = ForestColors_p;   speed = 10; scale = 20; colorLoop = 1;
   // generate noise data
   fillnoise8();
-
   // convert the noise data to colors in the LED array
   // using the current palette
   mapNoiseToLEDsUsingPalette();
-
   FastLED.show();
 }
 
@@ -278,7 +279,7 @@ void sweeper() {
 // 1 = 5 sec per palette
 // 2 = 10 sec per palette
 // etc
-#define HOLD_PALETTES_X_TIMES_AS_LONG 5
+#define HOLD_PALETTES_X_TIMES_AS_LONG 1
 
 void ChangePaletteAndSettingsPeriodically()
 {
@@ -287,24 +288,24 @@ void ChangePaletteAndSettingsPeriodically()
 
   if( lastSecond != secondHand) {
     lastSecond = secondHand;
-    if( secondHand ==  0)  { currentPalette = RainbowStripeColors_p;   speed =  9; scale = 18; colorLoop = 1; }
-    if( secondHand ==  5)  { SetupRandomPalette();                     speed = 24; scale = 26; colorLoop = 1; }
-    if( secondHand == 10)  { SetupBlackAndWhiteStripedPalette();       speed = 14; scale = 18; colorLoop = 1; }
-    if( secondHand == 15)  { SetupRandomPalette();                     speed = 40; scale = 20; colorLoop = 1; }//
-    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  8; scale = 30; colorLoop = 0; }
-    if( secondHand == 25)  { SetupRandomPalette();                     speed = 19; scale = 15; colorLoop = 1; }
-    if( secondHand == 30)  { currentPalette = LavaColors_p;            speed = 12; scale = 24; colorLoop = 0; }
-    if( secondHand == 35)  { SetupRandomPalette();                     speed = 29; scale = 4; colorLoop = 1; }
-    if( secondHand == 40)  { currentPalette = OceanColors_p;           speed = 24; scale = 30; colorLoop = 0; }
-    if( secondHand == 45)  { SetupRandomPalette();                     speed = 30; scale = 35; colorLoop = 1; }
-    if( secondHand == 50)  { currentPalette = PartyColors_p;           speed = 14; scale = 18; colorLoop = 1; }
-    if( secondHand == 55)  { SetupRandomPalette();                     speed = 30; scale = 28; colorLoop = 1; }
-    if( secondHand == 60)  { SetupPurpleAndGreenPalette();             speed =  9; scale = 20; colorLoop = 1; }
-    if( secondHand == 65)  { SetupRandomPalette();                     speed = 14; scale = 30; colorLoop = 1; }
-    if( secondHand == 70)  { currentPalette = ForestColors_p;          speed =  6; scale = 30; colorLoop = 0; }
-    if( secondHand == 75)  { SetupRandomPalette();                     speed = 16; scale = 28; colorLoop = 1; }//
-    if( secondHand == 80)  { currentPalette = RainbowColors_p;         speed = 60; scale = 25; colorLoop = 1; }
-    if( secondHand == 85)  { SetupRandomPalette();                     speed = 13; scale = 35; colorLoop = 1; }
+    if( secondHand ==  0)  { currentPalette = RainbowColors_p;         speed = 60; scale = 25; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand ==  5)  { SetupPaletteNeon();                       speed = 24; scale = 26; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand == 10)  { SetupBlackAndWhiteStripedPalette();       speed = 14; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand == 15)  { SetupRandomPalette();                     speed = 40; scale = 20; colorLoop = 1; xDrift = 20; yDrift = 1;}//good, x and y
+    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  8; scale = 30; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 25)  { SetupRandomPalette();                     speed = 19; scale = 15; colorLoop = 1; xDrift = 1; yDrift = 20;}//good, x and y
+    if( secondHand == 30)  { currentPalette = LavaColors_p;            speed = 12; scale = 24; colorLoop = 0; xDrift = 1; yDrift = 1;}//5 colors simple
+    if( secondHand == 35)  { SetupRandomPalette();                     speed = 29; scale = 4; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand == 40)  { currentPalette = OceanColors_p;           speed = 24; scale = 30; colorLoop = 0; xDrift = 1; yDrift = 1;}//zoom in
+    if( secondHand == 45)  { SetupRandomPalette();                     speed = 30; scale = 35; colorLoop = 1; xDrift = 10; yDrift = 20;}//good, x and y
+    if( secondHand == 50)  { currentPalette = PartyColors_p;           speed = 14; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 55)  { SetupRandomPalette();                     speed = 30; scale = 28; colorLoop = 1; xDrift = 20; yDrift = 10;}//good, x and y
+    if( secondHand == 60)  { SetupPurpleAndGreenPalette();             speed =  9; scale = 20; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand == 65)  { SetupRandomPalette();                     speed = 14; scale = 30; colorLoop = 1; xDrift = 25; yDrift = 25;}//good, x and y
+    if( secondHand == 70)  { SetupPaletteDarkness();                   speed =  6; scale = 8; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 75)  { SetupRandomPalette();                     speed = 16; scale = 28; colorLoop = 1; xDrift = 10; yDrift = 40;}//good, x and y
+    if( secondHand == 80)  { SetupPaletteSunrise();                    speed = 10; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
+    if( secondHand == 85)  { SetupRandomPalette();                     speed = 13; scale = 35; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
   }
 }
 
@@ -350,4 +351,98 @@ void SetupPurpleAndGreenPalette()
     purple, purple, black,  black,
     green,  green,  black,  black,
     purple, purple, black,  black );
+}
+
+//lu's palette
+void SetupLuPalette()
+{
+  CRGB DeepPink = CRGB::DeepPink;
+  CRGB Coral = CRGB::Coral;
+  CRGB DarkOrange = CRGB::DarkOrange;
+  CRGB CornflowerBlue = CRGB::CornflowerBlue;
+  CRGB DarkCyan = CRGB::DarkCyan;
+
+  currentPalette = CRGBPalette16(
+    DeepPink, DeepPink,
+    Coral, Coral,
+    DarkOrange, DarkOrange,
+    CornflowerBlue, CornflowerBlue,
+    DarkCyan, DarkCyan);
+  }
+
+void SetupPaletteSunrise()
+{
+CRGB OrangeRed = CRGB::DeepOrange;
+CRGB Orange = CRGB::Orange;
+CRGB Salmon = CRGB::Salmon;
+CRGB Pink = CRGB::Pink;
+CRGB MistyRose = CRGB::MistyRose;
+CRGB LightSkyBlue = CRGB::LightSkyBlue;
+
+currentPalette = CRGBPalette16(
+  OrangeRed, OrangeRed,
+  OrangeRed, OrangeRed,
+  Orange, Orange,
+  Salmon, Salmon,
+  Pink, Pink,
+  MistyRose, MistyRose,
+  LightSkyBlue, LightSkyBlue,
+  LightSkyBlue, LightSkyBlue);
+}
+
+void SetupPaletteSunrise()
+{
+CRGB OrangeRed = CRGB::DeepOrange;
+CRGB Orange = CRGB::Orange;
+CRGB Salmon = CRGB::Salmon;
+CRGB Pink = CRGB::Pink;
+CRGB MistyRose = CRGB::MistyRose;
+CRGB LightSkyBlue = CRGB::LightSkyBlue;
+
+currentPalette = CRGBPalette16(
+  OrangeRed, OrangeRed,
+  OrangeRed, OrangeRed
+  Orange, Orange,
+  Salmon, Salmon,
+  Pink, Pink,
+  MistyRose, MistyRose,
+  LightSkyBlue, LightSkyBlue,
+  LightSkyBlue, LightSkyBlue);
+}
+
+void SetupPaletteNeon()
+{
+  CRGB DarkTurquoise = CRGB::DarkTurquoise;
+  CRGB HotPink = CRGB::HotPink;
+  CRGB Navy = CRGB::Navy;
+  CRGB Black = CRGB::Black;
+  CRGB OrangeRed = CRGB::OrangeRed;
+
+  currentPalette = CRGBPalette16(
+    Navy, Navy,
+    DarkTurquoise, DarkTurquoise,
+    Black, Black,
+    HotPink, HotPink,
+    Black, Black,
+    OrangeRed, OrangeRed,
+    Black, Black,
+    HotPink, HotPink);
+}
+
+void SetupPaletteDarkness()
+{
+CRGB MidnightBlue = CRGB:: MidnightBlue;
+CRGB Black = CRGB::Black;
+CRGB Indigo = CRGB::Indigo;
+CRGB DarkSlateGray = CRGB::DarkSlateGray;
+
+currentPalette = CRGBPalette16(
+  MidnightBlue, MidnightBlue,
+  MidnightBlue, MidnightBlue,
+  Black, Black,
+  Indigo, Indigo,
+  Indigo, Indigo,
+  Black, Black,
+  DarkSlateGray, DarkSlateGray,
+  DarkSlateGray, DarkSlateGray);
 }
