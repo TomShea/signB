@@ -367,28 +367,11 @@ void SetupLuPalette()
     Coral, Coral,
     DarkOrange, DarkOrange,
     CornflowerBlue, CornflowerBlue,
-    DarkCyan, DarkCyan);
+    DarkCyan, DarkCyan,
+    DeepPink, DeepPink,
+    Coral, Coral,
+    DarkOrange, DarkOrange);
   }
-
-void SetupPaletteSunrise()
-{
-CRGB OrangeRed = CRGB::OrangeRed;
-CRGB Orange = CRGB::Orange;
-CRGB Salmon = CRGB::Salmon;
-CRGB Pink = CRGB::Pink;
-CRGB MistyRose = CRGB::MistyRose;
-CRGB LightSkyBlue = CRGB::LightSkyBlue;
-
-currentPalette = CRGBPalette16(
-  OrangeRed, OrangeRed,
-  OrangeRed, OrangeRed,
-  Orange, Orange,
-  Salmon, Salmon,
-  Pink, Pink,
-  MistyRose, MistyRose,
-  LightSkyBlue, LightSkyBlue,
-  LightSkyBlue, LightSkyBlue);
-}
 
 void SetupPaletteSunrise()
 {
