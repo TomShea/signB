@@ -401,7 +401,7 @@ CRGB LightSkyBlue = CRGB::LightSkyBlue;
 
 currentPalette = CRGBPalette16(
   OrangeRed, OrangeRed,
-  OrangeRed, OrangeRed
+  OrangeRed, OrangeRed,
   Orange, Orange,
   Salmon, Salmon,
   Pink, Pink,
@@ -416,7 +416,7 @@ void SetupPaletteNeon()
   CRGB HotPink = CRGB::HotPink;
   CRGB Navy = CRGB::Navy;
   CRGB Black = CRGB::Black;
-  CRGB OrangeRed = CRGB::OrangeRed;
+  CRGB OrangeRed = CRGB::DeepOrange;
 
   currentPalette = CRGBPalette16(
     Navy, Navy,
