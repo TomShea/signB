@@ -114,8 +114,8 @@ uint16_t speed = 20; // speed is set dynamically once we've started up
 uint16_t scale = 30; // scale is set dynamically once we've started up
 
 // Set the modifiers to determine the rate at which x and y scroll
-uint16_t xDrift = 1;
-uint16_t yDrift = 1;
+int xDrift = 1;
+int yDrift = 1;
 
 // This is the array that we keep our computed noise values in
 uint8_t noise[MAP_WIDTH/2 + 1][MAP_WIDTH/2 + 1];
@@ -279,7 +279,7 @@ void sweeper() {
 // 1 = 5 sec per palette
 // 2 = 10 sec per palette
 // etc
-#define HOLD_PALETTES_X_TIMES_AS_LONG 1
+#define HOLD_PALETTES_X_TIMES_AS_LONG 18
 
 void ChangePaletteAndSettingsPeriodically()
 {
@@ -291,19 +291,19 @@ void ChangePaletteAndSettingsPeriodically()
     if( secondHand ==  0)  { currentPalette = RainbowColors_p;         speed = 60; scale = 25; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
     if( secondHand ==  5)  { SetupPaletteNeon();                       speed = 24; scale = 26; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
     if( secondHand == 10)  { SetupBlackAndWhiteStripedPalette();       speed = 14; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
-    if( secondHand == 15)  { SetupRandomPalette();                     speed = 40; scale = 20; colorLoop = 1; xDrift = 20; yDrift = 1;}//good, x and y
-    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  8; scale = 30; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
-    if( secondHand == 25)  { SetupRandomPalette();                     speed = 19; scale = 15; colorLoop = 1; xDrift = 1; yDrift = 20;}//good, x and y
+    if( secondHand == 15)  { SetupRandomPalette();                     speed = 40; scale = 20; colorLoop = 1; xDrift = 2; yDrift = 1;}//good, x and y
+    if( secondHand == 20)  { currentPalette = CloudColors_p;           speed =  8; scale = 20; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 25)  { SetupRandomPalette();                     speed = 19; scale = 15; colorLoop = 1; xDrift = 1; yDrift = -10;}//good, x and y
     if( secondHand == 30)  { currentPalette = LavaColors_p;            speed = 12; scale = 24; colorLoop = 0; xDrift = 1; yDrift = 1;}//5 colors simple
     if( secondHand == 35)  { SetupRandomPalette();                     speed = 29; scale = 4; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
-    if( secondHand == 40)  { currentPalette = OceanColors_p;           speed = 24; scale = 30; colorLoop = 0; xDrift = 1; yDrift = 1;}//zoom in
-    if( secondHand == 45)  { SetupRandomPalette();                     speed = 30; scale = 35; colorLoop = 1; xDrift = 10; yDrift = 20;}//good, x and y
+    if( secondHand == 40)  { currentPalette = OceanColors_p;           speed = 24; scale = 12; colorLoop = 0; xDrift = 1; yDrift = 1;}//zoom in
+    if( secondHand == 45)  { SetupRandomPalette();                     speed = 30; scale = 35; colorLoop = 1; xDrift = 1; yDrift = 5;}//good, x and y
     if( secondHand == 50)  { currentPalette = PartyColors_p;           speed = 14; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//good, x and y
-    if( secondHand == 55)  { SetupRandomPalette();                     speed = 30; scale = 28; colorLoop = 1; xDrift = 20; yDrift = 10;}//good, x and y
+    if( secondHand == 55)  { SetupRandomPalette();                     speed = 30; scale = 28; colorLoop = 1; xDrift = 1; yDrift = 1;}//good, x and y
     if( secondHand == 60)  { SetupPurpleAndGreenPalette();             speed =  9; scale = 20; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
-    if( secondHand == 65)  { SetupRandomPalette();                     speed = 14; scale = 30; colorLoop = 1; xDrift = 25; yDrift = 25;}//good, x and y
-    if( secondHand == 70)  { SetupPaletteDarkness();                   speed =  6; scale = 8; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
-    if( secondHand == 75)  { SetupRandomPalette();                     speed = 16; scale = 28; colorLoop = 1; xDrift = 10; yDrift = 40;}//good, x and y
+    if( secondHand == 65)  { SetupRandomPalette();                     speed = 14; scale = 30; colorLoop = 1; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 70)  { SetupPaletteDarkness();                   speed =  6; scale = 20; colorLoop = 0; xDrift = 1; yDrift = 1;}//good, x and y
+    if( secondHand == 75)  { SetupRandomPalette();                     speed = 16; scale = 28; colorLoop = 1; xDrift = -10; yDrift = 1;}//good, x and y
     if( secondHand == 80)  { SetupPaletteSunrise();                    speed = 10; scale = 18; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
     if( secondHand == 85)  { SetupRandomPalette();                     speed = 13; scale = 35; colorLoop = 1; xDrift = 1; yDrift = 1;}//10
   }
