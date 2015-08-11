@@ -372,7 +372,7 @@ void SetupLuPalette()
 
 void SetupPaletteSunrise()
 {
-CRGB OrangeRed = CRGB::DeepOrange;
+CRGB OrangeRed = CRGB::OrangeRed;
 CRGB Orange = CRGB::Orange;
 CRGB Salmon = CRGB::Salmon;
 CRGB Pink = CRGB::Pink;
@@ -392,7 +392,7 @@ currentPalette = CRGBPalette16(
 
 void SetupPaletteSunrise()
 {
-CRGB OrangeRed = CRGB::DeepOrange;
+CRGB OrangeRed = CRGB::OrangeRed;
 CRGB Orange = CRGB::Orange;
 CRGB Salmon = CRGB::Salmon;
 CRGB Pink = CRGB::Pink;
@@ -416,7 +416,7 @@ void SetupPaletteNeon()
   CRGB HotPink = CRGB::HotPink;
   CRGB Navy = CRGB::Navy;
   CRGB Black = CRGB::Black;
-  CRGB OrangeRed = CRGB::DeepOrange;
+  CRGB OrangeRed = CRGB::OrangeRed;
 
   currentPalette = CRGBPalette16(
     Navy, Navy,
